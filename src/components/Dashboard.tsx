@@ -29,7 +29,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     { label: 'Battery', value: 85, color: 'var(--accent-primary)' }
   ];
 
-  const [lastCheckIn, setLastCheckIn] = useState(Date.now());
+  const lastCheckIn = React.useRef(Date.now());
   const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
@@ -52,8 +52,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       watcher = navigator.geolocation.watchPosition(
         (pos) => {
           setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          setLastCheckIn(Date.now()); // Reset movement detected
-          console.log("GPS Pulse Received: ", pos.coords.latitude);
+          lastCheckIn.current = Date.now(); // Reset movement detected
+          console.log("GPS Pulse Received");
         },
         (err) => console.error("GPS Blocked"),
         { enableHighAccuracy: true }
@@ -61,9 +61,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     }
 
     const watchdog = setInterval(() => {
-      const idleTime = (Date.now() - lastCheckIn) / 1000;
-      if (idleTime > 60 && !activeIncident) { // Stationary for 60s
-         setActiveAlert("SENTINEL ALERT: Suspicious inactivity detected in High-Risk Zone. Confirming status...");
+      const idleTime = (Date.now() - lastCheckIn.current) / 1000;
+      if (idleTime > 60) { // Stationary for 60s
+         setActiveAlert("SENTINEL ALERT: Suspicious inactivity detected. Confirming status...");
       }
     }, 10000);
 
@@ -93,7 +93,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       clearInterval(watchdog);
       if (watcher) navigator.geolocation.clearWatch(watcher);
     };
-  }, [user.email, lastCheckIn, activeIncident]);
+  }, [user.email]);
 
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
