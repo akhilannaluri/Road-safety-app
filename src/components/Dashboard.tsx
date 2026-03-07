@@ -48,14 +48,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
     // V8: Live GPS & Movement Watchdog
     let watcher: number;
-    if (\"geolocation\" in navigator) {
+    if ("geolocation" in navigator) {
       watcher = navigator.geolocation.watchPosition(
         (pos) => {
           setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
           setLastCheckIn(Date.now()); // Reset movement detected
-          console.log(\"GPS Pulse Received: \", pos.coords.latitude);
+          console.log("GPS Pulse Received: ", pos.coords.latitude);
         },
-        (err) => console.error(\"GPS Blocked\"),
+        (err) => console.error("GPS Blocked"),
         { enableHighAccuracy: true }
       );
     }
@@ -63,7 +63,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     const watchdog = setInterval(() => {
       const idleTime = (Date.now() - lastCheckIn) / 1000;
       if (idleTime > 60 && !activeIncident) { // Stationary for 60s
-         setActiveAlert(\"SENTINEL ALERT: Suspicious inactivity detected in High-Risk Zone. Confirming status...\");
+         setActiveAlert("SENTINEL ALERT: Suspicious inactivity detected in High-Risk Zone. Confirming status...");
       }
     }, 10000);
 
@@ -73,17 +73,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         const incident = await getActiveIncident(user.email);
         setActiveIncident(incident);
       } catch (err) {
-        console.error(\"Incident polling failed\");
+        console.error("Incident polling failed");
       }
     };
     pollIncident();
     const interval = setInterval(pollIncident, 5000);
 
     const timers = [
-      setTimeout(() => setActiveAlert(\"Weather Update: Heavy Rain detected. Visibility decreased.\"), 8000),
+      setTimeout(() => setActiveAlert("Weather Update: Heavy Rain detected. Visibility decreased."), 8000),
       setTimeout(() => {
         setSafetyScore(92);
-        setActiveAlert(\"Precaution: High hydroplane risk on Route 101. Suggest reducing speed.\");
+        setActiveAlert("Precaution: High hydroplane risk on Route 101. Suggest reducing speed.");
       }, 15000)
     ];
 
