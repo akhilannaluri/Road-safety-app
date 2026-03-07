@@ -124,9 +124,17 @@ const PoliceDashboard: React.FC<PoliceDashboardProps> = ({ user, onLogout }) => 
                             <span>Battery Health</span>
                             <span style={{ fontWeight: 700 }}>{selectedVehicle.batterySnapshot || 0}%</span>
                           </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span>Last GPS Lock</span>
-                            <span style={{ color: 'var(--accent-primary)' }}>{selectedVehicle.location}</span>
+                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                               <span style={{ color: 'var(--accent-primary)', fontSize: '0.8rem' }}>{selectedVehicle.location}</span>
+                               <button 
+                                 onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${selectedVehicle.location}`, '_blank')}
+                                 style={{ width: 'auto', padding: '4px 8px', fontSize: '0.7rem', background: 'var(--accent-glow)', border: '1px solid var(--accent-primary)' }}
+                               >
+                                 🗺️ View
+                               </button>
+                            </div>
                           </div>
                        </div>
                     </div>
