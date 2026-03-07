@@ -61,7 +61,7 @@ const PoliceDashboard: React.FC<PoliceDashboardProps> = ({ user, onLogout }) => 
         </div>
         <div style={{ display: 'flex', gap: '15px' }}>
           <button onClick={() => alert("All units alert: High incident density detected in Sector 7.")} style={{ width: 'auto', background: 'rgba(255,255,255,0.05)', fontSize: '0.8rem' }}>Broadcast Hotspot Alert</button>
-          <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', borderRadius: '30px' }}>Secure Logout</button>
+          <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', borderRadius: '30px', background: 'var(--danger)', color: 'white', fontWeight: 700 }}>Secure Logout</button>
         </div>
       </header>
 

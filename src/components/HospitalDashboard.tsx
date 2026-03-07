@@ -51,7 +51,7 @@ const HospitalDashboard: React.FC<HospitalDashboardProps> = ({ user, onLogout })
           <h1 style={{ fontSize: '1.2rem', fontWeight: 800 }}>V6 ER TRAUMA COMMAND</h1>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>Facility: {user.stationId} | Level 1 Trauma Hub</p>
         </div>
-        <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', borderRadius: '30px', background: '#059669' }}>Terminal Exit</button>
+        <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', borderRadius: '30px', background: 'var(--danger)', color: 'white', fontWeight: 700 }}>Terminal Exit</button>
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px', padding: '0 20px 20px 20px' }}>
