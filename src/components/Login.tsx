@@ -149,9 +149,15 @@ Possible fixes:
           <button 
             type="button" 
             onClick={() => {
-              setEmail('demo@safety.gov');
-              setPhone('+1234567890');
-              setCarName('Security Patrol V8');
+              const demoUser = {
+                id: 888,
+                email: 'demo@safety.gov',
+                phone: '+1234567890',
+                carName: 'Security Patrol V8',
+                role: 'driver' as const
+              };
+              localStorage.setItem('road_safety_user', JSON.stringify(demoUser));
+              onLogin(demoUser);
             }} 
             style={{ 
               width: '100%', 

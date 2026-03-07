@@ -153,7 +153,7 @@ SMS: Signal broadcast to ${user.phone}`);
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
            <div style={{ textAlign: 'right' }}>
              <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', margin: 0, textTransform: 'uppercase' }}>Active Driver</p>
-             <p style={{ fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>ID #{user.id || '...'} | {user.email.split('@')[0]}</p>
+             <p style={{ fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>ID #{user.id || '...'} | {user.email ? user.email.split('@')[0] : 'Driver'}</p>
            </div>
            <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', background: 'var(--danger)', color: 'white', border: 'none', borderRadius: '30px', fontSize: '0.85rem', padding: '10px 20px', fontWeight: 700 }}>
              Secure Logout
