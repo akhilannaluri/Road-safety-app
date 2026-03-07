@@ -36,63 +36,38 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     const fetchData = async () => {
       try {
         const facData = await getFacilities();
-        setFacilities(facData);
+        if (facData) setFacilities(facData);
         
         const contactData = await getContacts(user.email);
-        setContacts(contactData);
+        if (contactData) setContacts(contactData);
       } catch (err) {
-        console.error("Data load failed from server");
+        console.warn("Cloud connection limited locally.");
       }
     };
     fetchData();
 
-    // V8: Live GPS & Movement Watchdog
-    let watcher: number;
+    // V8: GPS Tracking (Simplified)
     if ("geolocation" in navigator) {
-      watcher = navigator.geolocation.watchPosition(
-        (pos) => {
-          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          lastCheckIn.current = Date.now(); // Reset movement detected
-          console.log("GPS Pulse Received");
-        },
-        (err) => console.error("GPS Blocked"),
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        (err) => console.log("GPS Location Perms required for Live Tracking."),
         { enableHighAccuracy: true }
       );
     }
 
-    const watchdog = setInterval(() => {
-      const idleTime = (Date.now() - lastCheckIn.current) / 1000;
-      if (idleTime > 60) { // Stationary for 60s
-         setActiveAlert("SENTINEL ALERT: Suspicious inactivity detected. Confirming status...");
-      }
-    }, 10000);
-
-    // V6: Live Dispatch Polling
+    // Live Dispatch Polling
     const pollIncident = async () => {
       try {
         const incident = await getActiveIncident(user.email);
-        setActiveIncident(incident);
+        if (incident) setActiveIncident(incident);
       } catch (err) {
-        console.error("Incident polling failed");
+        // Silent catch for stable UI
       }
     };
     pollIncident();
     const interval = setInterval(pollIncident, 5000);
 
-    const timers = [
-      setTimeout(() => setActiveAlert("Weather Update: Heavy Rain detected. Visibility decreased."), 8000),
-      setTimeout(() => {
-        setSafetyScore(92);
-        setActiveAlert("Precaution: High hydroplane risk on Route 101. Suggest reducing speed.");
-      }, 15000)
-    ];
-
-    return () => {
-      timers.forEach(clearTimeout);
-      clearInterval(interval);
-      clearInterval(watchdog);
-      if (watcher) navigator.geolocation.clearWatch(watcher);
-    };
+    return () => clearInterval(interval);
   }, [user.email]);
 
   const handleAddContact = async (e: React.FormEvent) => {
