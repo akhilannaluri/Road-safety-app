@@ -20,13 +20,17 @@ export interface UserData {
 
 
 function App() {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(() => {
+    const saved = localStorage.getItem('road_safety_user');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   const handleLogin = (data: UserData) => {
     setUserData(data);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('road_safety_user');
     setUserData(null);
   };
 

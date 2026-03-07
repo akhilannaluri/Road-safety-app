@@ -26,6 +26,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         role,
         stationId: role !== 'driver' ? stationId : undefined
       });
+      localStorage.setItem('road_safety_user', JSON.stringify(user));
       onLogin(user);
     } catch (err) {
       console.error("Login Error:", err);

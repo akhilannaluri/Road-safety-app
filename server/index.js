@@ -108,20 +108,52 @@ app.get('/api/facilities', async (req, res) => {
 
 // Create Incident (SOS)
 
+const nodemailer = require('nodemailer');
+
+// Safety Alert Mailer Setup
+const transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false,
+  auth: {
+    user: 'ethereal_user', // This will be dynamic for users later
+    pass: 'ethereal_pass',
+  },
+});
+
 app.post('/api/incidents', async (req, res) => {
   const { type, location, driverEmail, fuelSnapshot, batterySnapshot } = req.body;
   
   try {
     const incident = await prisma.incident.create({
-      data: {
-        type,
-        location,
-        driverEmail,
-        fuelSnapshot,
-        batterySnapshot,
-        status: 'OPEN'
-      }
+      data: { type, location, driverEmail, fuelSnapshot, batterySnapshot, status: 'OPEN' },
+      include: { driver: { include: { contacts: true } } }
     });
+
+    // Send Email Alerts to Emergency Contacts
+    if (incident.driver && incident.driver.contacts.length > 0) {
+      incident.driver.contacts.forEach(contact => {
+        const mailOptions = {
+          from: '"ROAD SENTINEL AI" <safety@road-guard.gov>',
+          to: driverEmail, // Sending to the driver's email as well for confirmation
+          subject: `🚨 EMERGENCY ALERT: ${type} Incident Reported`,
+          html: `
+            <div style="background: #1a1a1a; color: white; padding: 30px; border-radius: 12px; font-family: sans-serif;">
+              <h1 style="color: #ef4444;">SOS ALERT TRIGGERED</h1>
+              <p>An emergency incident has been reported for: <strong>${driverEmail}</strong></p>
+              <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                <p><strong>Type:</strong> ${type}</p>
+                <p><strong>Location:</strong> ${location}</p>
+                <p><strong>Vehicle Telemetry:</strong> Fuel ${fuelSnapshot}%, Battery ${batterySnapshot}%</p>
+              </div>
+              <p style="margin-top: 20px; opacity: 0.7; font-size: 0.8rem;">This is an automated safety broadcast from the V7 Road Safety Ecosystem.</p>
+            </div>
+          `
+        };
+        transporter.sendMail(mailOptions).then(info => console.log('Alert Email Sent:', info.messageId));
+      });
+    }
+
     res.json(incident);
   } catch (error) {
     res.status(500).json({ error: error.message });

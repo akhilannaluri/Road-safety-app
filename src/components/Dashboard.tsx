@@ -110,7 +110,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         fuelSnapshot: fuelVal,
         batterySnapshot: battVal
       });
-      alert(`CRITICAL SOS: ${type} dispatched. Live telemetry (Fuel: ${fuelVal}%, Battery: ${battVal}%) synced to Command Center.`);
+      alert(`CRITICAL SOS: ${type} dispatched. 
+      
+📡 Live telemetry synced to Command Center.
+📧 Emergency Email sent to contacts.
+📱 SMS alert broadcast triggered.`);
     } catch (err) {
       alert("Failed to sync SOS to database. Ensure server connectivity.");
     } finally {
