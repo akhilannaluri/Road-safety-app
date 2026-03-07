@@ -55,7 +55,7 @@ Possible fixes:
           </div>
           <h2 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: '8px' }}>Road Sentinel</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Emergency Response & Safety Ecosystem
+            Emergency Response & Safety Ecosystem <span style={{ color: 'var(--accent-primary)', fontWeight: 800 }}>V8</span>
           </p>
         </div>
 
@@ -153,9 +153,20 @@ Possible fixes:
               setPhone('+1234567890');
               setCarName('Security Patrol V8');
             }} 
-            style={{ width: 'auto', background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '10px', textDecoration: 'underline' }}
+            style={{ 
+              width: '100%', 
+              background: 'rgba(59, 130, 246, 0.1)', 
+              border: '1px dashed var(--accent-primary)', 
+              color: 'var(--accent-primary)', 
+              fontSize: '0.9rem', 
+              marginTop: '15px', 
+              padding: '12px',
+              borderRadius: '12px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
           >
-            Quick Launch (Demo Mode)
+            🚀 QUICK LAUNCH (DEMO MODE)
           </button>
         </form>
       </div>
