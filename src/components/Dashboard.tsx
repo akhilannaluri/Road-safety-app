@@ -46,18 +46,21 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     };
     fetchData();
 
-    // V8: GPS Tracking (Stable Loop)
-    let watcher: number;
-    if ("geolocation" in navigator) {
-      watcher = navigator.geolocation.watchPosition(
-        (pos) => {
-          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-          lastCheckIn.current = Date.now();
-        },
-        (err) => console.log("GPS Location required for tracking."),
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    }
+    // V8: GPS Tracking (Ultra-Stable Mode)
+    const updateLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            lastCheckIn.current = Date.now();
+          },
+          (err) => console.log("GPS Location Perms required."),
+          { enableHighAccuracy: true, timeout: 5000 }
+        );
+      }
+    };
+    updateLocation();
+    const gpsInterval = setInterval(updateLocation, 15000);
 
     // Live Dispatch Polling (Cloud Synchronization)
     const pollIncident = async () => {
@@ -67,11 +70,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       } catch (err) { /* Silent for UI stability */ }
     };
     pollIncident();
-    const interval = setInterval(pollIncident, 8000);
+    const interval = setInterval(pollIncident, 10000);
 
     return () => {
       clearInterval(interval);
-      if (watcher) navigator.geolocation.clearWatch(watcher);
+      clearInterval(gpsInterval);
     };
   }, [user.email]);
 
