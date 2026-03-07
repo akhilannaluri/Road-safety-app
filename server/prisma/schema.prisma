@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  phone     String
+  carName   String
+  role      String
+  stationId String?
+  incidents Incident[]
+  contacts  EmergencyContact[]
+}
+
+model EmergencyContact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  relation  String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Facility {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String   // 'Medical', 'Security', 'Fire'
+  address   String
+  distance  String
+}
+
+model Incident {
+  id          Int      @id @default(autoincrement())
+  type        String
+  location    String
+  status      String   @default("OPEN")
+  timestamp   DateTime @default(now())
+  driverEmail String
+  driver      User     @relation(fields: [driverEmail], references: [email])
+
+  // V6 Real-time Coordination & Telemetry
+  fuelSnapshot    Int?
+  batterySnapshot Int?
+  assignedUnit    String?
+  eta             String?
+}
+
+
