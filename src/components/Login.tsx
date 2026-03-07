@@ -138,12 +138,24 @@ Possible fixes:
             </>
           )}
 
-          <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '16px' }}>
+          <button type=\"submit\" className=\"btn-primary\" disabled={loading} style={{ marginTop: '16px' }}>
             {loading ? (
-              <span className="animate-pulse">Authorizing...</span>
+              <span className=\"animate-pulse\">Authorizing...</span>
             ) : (
               <span>Enter Dashboard</span>
             )}
+          </button>
+
+          <button 
+            type=\"button\" 
+            onClick={() => {
+              setEmail('demo@safety.gov');
+              setPhone('+1234567890');
+              setCarName('Security Patrol V8');
+            }} 
+            style={{ width: 'auto', background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '10px', textDecoration: 'underline' }}
+          >
+            Quick Launch (Demo Mode)
           </button>
         </form>
       </div>

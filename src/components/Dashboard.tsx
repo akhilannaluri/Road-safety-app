@@ -29,6 +29,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     { label: 'Battery', value: 85, color: 'var(--accent-primary)' }
   ];
 
+  const [lastCheckIn, setLastCheckIn] = useState(Date.now());
+  const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,31 +46,54 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     };
     fetchData();
 
+    // V8: Live GPS & Movement Watchdog
+    let watcher: number;
+    if (\"geolocation\" in navigator) {
+      watcher = navigator.geolocation.watchPosition(
+        (pos) => {
+          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setLastCheckIn(Date.now()); // Reset movement detected
+          console.log(\"GPS Pulse Received: \", pos.coords.latitude);
+        },
+        (err) => console.error(\"GPS Blocked\"),
+        { enableHighAccuracy: true }
+      );
+    }
+
+    const watchdog = setInterval(() => {
+      const idleTime = (Date.now() - lastCheckIn) / 1000;
+      if (idleTime > 60 && !activeIncident) { // Stationary for 60s
+         setActiveAlert(\"SENTINEL ALERT: Suspicious inactivity detected in High-Risk Zone. Confirming status...\");
+      }
+    }, 10000);
+
     // V6: Live Dispatch Polling
     const pollIncident = async () => {
       try {
         const incident = await getActiveIncident(user.email);
         setActiveIncident(incident);
       } catch (err) {
-        console.error("Incident polling failed");
+        console.error(\"Incident polling failed\");
       }
     };
     pollIncident();
     const interval = setInterval(pollIncident, 5000);
 
     const timers = [
-      setTimeout(() => setActiveAlert("Weather Update: Heavy Rain detected. Visibility decreased."), 8000),
+      setTimeout(() => setActiveAlert(\"Weather Update: Heavy Rain detected. Visibility decreased.\"), 8000),
       setTimeout(() => {
         setSafetyScore(92);
-        setActiveAlert("Precaution: High hydroplane risk on Route 101. Suggest reducing speed.");
+        setActiveAlert(\"Precaution: High hydroplane risk on Route 101. Suggest reducing speed.\");
       }, 15000)
     ];
 
     return () => {
       timers.forEach(clearTimeout);
       clearInterval(interval);
+      clearInterval(watchdog);
+      if (watcher) navigator.geolocation.clearWatch(watcher);
     };
-  }, [user.email]);
+  }, [user.email, lastCheckIn, activeIncident]);
 
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
