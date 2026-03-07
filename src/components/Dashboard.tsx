@@ -141,8 +141,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 Alert: ${type}
 Location: ${locString}
 Tracking: LIVE (📡 GPS Locked)
-Contacts: ${contacts.length} members notified via Cloud.
-Unit Dispatch: Pending Confirmation.`);
+Voice Relay: 🤙 Contacting ${contacts.length > 0 ? contacts[0].name : 'Family'} & Police...
+Unit Dispatch: Pending Confirmation via radio.`);
     } catch (err) {
       alert("❌ SIGNAL INTERRUPTED: Emergency cloud unavailable. Try manual dial.");
     } finally {

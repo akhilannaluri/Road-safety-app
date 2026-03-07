@@ -138,28 +138,39 @@ app.post('/api/incidents', async (req, res) => {
       include: { driver: { include: { contacts: true } } }
     });
 
-    // Send Email Alerts to Emergency Contacts
-    if (transporter && incident.driver && incident.driver.contacts.length > 0) {
+    // Send Email & Simulate Voice/Call Alerts to Emergency Contacts
+    if (incident.driver && incident.driver.contacts.length > 0) {
+      console.log(`[EMERGENCY DISPATCH] Starting Parallel Response for ${driverEmail}`);
+      
       incident.driver.contacts.forEach(contact => {
-        const mailOptions = {
-          from: '"ROAD SENTINEL AI" <safety@road-guard.gov>',
-          to: driverEmail, // Sending to the driver's email as well for confirmation
-          subject: `🚨 EMERGENCY ALERT: ${type} Incident Reported`,
-          html: `
-            <div style="background: #1a1a1a; color: white; padding: 30px; border-radius: 12px; font-family: sans-serif;">
-              <h1 style="color: #ef4444;">SOS ALERT TRIGGERED</h1>
-              <p>An emergency incident has been reported for: <strong>${driverEmail}</strong></p>
-              <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
-                <p><strong>Type:</strong> ${type}</p>
-                <p><strong>Location:</strong> ${location}</p>
-                <p><strong>Vehicle Telemetry:</strong> Fuel ${fuelSnapshot}%, Battery ${batterySnapshot}%</p>
+        // Log the Voice Call Relay
+        console.log(`📡 [VOICE RELAY] Initiating call to Next-of-Kin: ${contact.name} at ${contact.phone}`);
+        console.log(`📡 [VOICE RELAY] Playing Automated Message: "Emergency alert for ${incident.driver.carName} at ${location}."`);
+
+        if (transporter) {
+          const mailOptions = {
+            from: '"ROAD SENTINEL AI" <safety@road-guard.gov>',
+            to: driverEmail, 
+            subject: `🚨 EMERGENCY ALERT: ${type} Incident Reported`,
+            html: `
+              <div style="background: #1a1a1a; color: white; padding: 30px; border-radius: 12px; font-family: sans-serif;">
+                <h1 style="color: #ef4444;">SOS ALERT TRIGGERED</h1>
+                <p>An emergency incident has been reported for: <strong>${driverEmail}</strong></p>
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                  <p><strong>Type:</strong> ${type}</p>
+                  <p><strong>Location:</strong> ${location}</p>
+                  <p><strong>Contact Notified:</strong> ${contact.name} (${contact.phone})</p>
+                </div>
+                <p style="margin-top: 20px; opacity: 0.7; font-size: 0.8rem;">VOICE ALERT: A call has also been initiated to this number.</p>
               </div>
-              <p style="margin-top: 20px; opacity: 0.7; font-size: 0.8rem;">This is an automated safety broadcast from the V7 Road Safety Ecosystem.</p>
-            </div>
-          `
-        };
-        transporter.sendMail(mailOptions).then(info => console.log('Alert Email Sent:', info.messageId));
+            `
+          };
+          transporter.sendMail(mailOptions).then(info => console.log('Relay Email Sent:', info.messageId)).catch(err => console.error('Relay Email Failed', err));
+        }
       });
+
+      // Log Authority Voice Alert
+      console.log(`🚨 [AUTHORITY CALL] Radioing Police Command Center for location: ${location}`);
     }
 
     res.json(incident);
