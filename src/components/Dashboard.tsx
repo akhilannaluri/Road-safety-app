@@ -46,42 +46,32 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     };
     fetchData();
 
-    // V8: GPS Tracking (Simplified)
+    // V8: GPS Tracking (Stable Loop)
+    let watcher: number;
     if ("geolocation" in navigator) {
-      navigator.geolocation.watchPosition(
+      watcher = navigator.geolocation.watchPosition(
         (pos) => {
           setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
           lastCheckIn.current = Date.now();
         },
-        (err) => console.log("GPS Location Perms required."),
-        { enableHighAccuracy: true }
+        (err) => console.log("GPS Location required for tracking."),
+        { enableHighAccuracy: true, timeout: 10000 }
       );
     }
 
-    // V8: Sentinel Watchdog (Stable)
-    const watchdog = setInterval(() => {
-      const idleTime = (Date.now() - lastCheckIn.current) / 1000;
-      if (idleTime > 60) { // Stationary for 60s
-         setActiveAlert("🛰️ SENTINEL ALERT: Long-term stationary detected. Broadcasting coordinates to contacts...");
-         // Auto-trigger security beacon if perfectly still for 90s (could add more logic)
-      }
-    }, 15000);
-
-    // Live Dispatch Polling
+    // Live Dispatch Polling (Cloud Synchronization)
     const pollIncident = async () => {
       try {
         const incident = await getActiveIncident(user.email);
         if (incident) setActiveIncident(incident);
-      } catch (err) {
-        // Silent catch for stable UI
-      }
+      } catch (err) { /* Silent for UI stability */ }
     };
     pollIncident();
-    const interval = setInterval(pollIncident, 5000);
+    const interval = setInterval(pollIncident, 8000);
 
     return () => {
       clearInterval(interval);
-      clearInterval(watchdog);
+      if (watcher) navigator.geolocation.clearWatch(watcher);
     };
   }, [user.email]);
 
@@ -136,13 +126,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         batterySnapshot: battVal
       });
 
+      const contactName = (contacts && contacts.length > 0) ? contacts[0].name : 'Emergency Contact';
       alert(`🚨 CRITICAL BROADCAST SENT!
     
-Alert: ${type}
+Alert: ${type.toUpperCase()}
 Location: ${locString}
 Tracking: LIVE (📡 GPS Locked)
-Voice Relay: 🤙 Contacting ${contacts.length > 0 ? contacts[0].name : 'Family'} & Police...
-Unit Dispatch: Pending Confirmation via radio.`);
+Voice Relay: 🤙 Contacting ${contactName} & Police precinct...
+Unit Dispatch: Pending Confirmation via Satellite.`);
     } catch (err) {
       alert("❌ SIGNAL INTERRUPTED: Emergency cloud unavailable. Try manual dial.");
     } finally {
