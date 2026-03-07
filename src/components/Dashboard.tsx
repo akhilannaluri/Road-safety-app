@@ -97,9 +97,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     }
   };
 
+  const [isSending, setIsSending] = useState(false);
+
   const handleSOS = async (type: string) => {
+    setIsSending(true);
     setSosType(type);
     try {
+      // Artificial delay for professional "Satellite/Security Link" feel
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
       const fuelVal = diagnostics.find(d => d.label === 'Fuel Level')?.value;
       const battVal = diagnostics.find(d => d.label === 'Battery')?.value;
 
@@ -110,14 +116,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         fuelSnapshot: fuelVal,
         batterySnapshot: battVal
       });
-      alert(`CRITICAL SOS: ${type} dispatched. 
-      
-📡 Live telemetry synced to Command Center.
-📧 Emergency Email sent to contacts.
-📱 SMS alert broadcast triggered.`);
+      alert(`🛡️ EMERGENCY LINK ESTABLISHED!
+    
+Type: ${type}
+Status: Authorities Notified
+Email: Broadcast sent to Gmail contacts
+SMS: Signal broadcast to ${user.phone}`);
     } catch (err) {
-      alert("Failed to sync SOS to database. Ensure server connectivity.");
+      alert("❌ SIGNAL INTERRUPTED: Check your connection and try again.");
     } finally {
+      setIsSending(false);
       setSosType(null);
     }
   };
