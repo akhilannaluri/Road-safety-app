@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://road-safety-app-djj6.onrender.com/api';
 
 export const loginUser = async (userData: any) => {
   const response = await fetch(`${API_URL}/auth/login`, {
