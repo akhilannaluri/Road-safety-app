@@ -108,18 +108,26 @@ app.get('/api/facilities', async (req, res) => {
 
 // Create Incident (SOS)
 
-const nodemailer = require('nodemailer');
+let nodemailer;
+try {
+  nodemailer = require('nodemailer');
+} catch (e) {
+  console.log('Nodemailer not installed. Email alerts will be skipped locally.');
+}
 
 // Safety Alert Mailer Setup
-const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false,
-  auth: {
-    user: 'ethereal_user', // This will be dynamic for users later
-    pass: 'ethereal_pass',
-  },
-});
+let transporter;
+if (nodemailer) {
+  transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'ethereal_user', 
+      pass: 'ethereal_pass',
+    },
+  });
+}
 
 app.post('/api/incidents', async (req, res) => {
   const { type, location, driverEmail, fuelSnapshot, batterySnapshot } = req.body;
@@ -131,7 +139,7 @@ app.post('/api/incidents', async (req, res) => {
     });
 
     // Send Email Alerts to Emergency Contacts
-    if (incident.driver && incident.driver.contacts.length > 0) {
+    if (transporter && incident.driver && incident.driver.contacts.length > 0) {
       incident.driver.contacts.forEach(contact => {
         const mailOptions = {
           from: '"ROAD SENTINEL AI" <safety@road-guard.gov>',
