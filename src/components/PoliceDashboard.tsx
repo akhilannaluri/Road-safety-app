@@ -167,7 +167,7 @@ const PoliceDashboard: React.FC<PoliceDashboardProps> = ({ user, onLogout }) => 
                  </div>
               </div>
            ) : (
-              <div style={{ flex: 1, display: 'flex', flexDir: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.4 }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.4 }}>
                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
                  <p style={{ marginTop: '20px' }}>Standby Mode. Selecting incident for deep surveillance...</p>
               </div>
