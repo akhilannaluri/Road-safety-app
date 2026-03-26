@@ -33,50 +33,42 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
+    // V10: Safe Mode Initializer
     const fetchData = async () => {
       try {
         const facData = await getFacilities();
-        if (facData) setFacilities(facData);
+        if (facData && Array.isArray(facData)) setFacilities(facData);
         
         const contactData = await getContacts(user.email);
-        if (contactData) setContacts(contactData);
+        if (contactData && Array.isArray(contactData)) setContacts(contactData);
       } catch (err) {
-        console.warn("Cloud connection limited locally.");
+        console.warn("Cloud Sync Paused.");
       }
     };
     fetchData();
 
-    // V8: GPS Tracking (Ultra-Stable Mode)
-    const updateLocation = () => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-            lastCheckIn.current = Date.now();
-          },
-          (err) => console.log("GPS Location Perms required."),
-          { enableHighAccuracy: true, timeout: 5000 }
-        );
-      }
-    };
-    updateLocation();
-    const gpsInterval = setInterval(updateLocation, 15000);
-
-    // Live Dispatch Polling (Cloud Synchronization)
+    // V10: Stable Local Pulse
     const pollIncident = async () => {
       try {
         const incident = await getActiveIncident(user.email);
         if (incident) setActiveIncident(incident);
-      } catch (err) { /* Silent for UI stability */ }
+      } catch (err) { }
     };
     pollIncident();
     const interval = setInterval(pollIncident, 10000);
 
-    return () => {
-      clearInterval(interval);
-      clearInterval(gpsInterval);
-    };
+    return () => clearInterval(interval);
   }, [user.email]);
+
+  const updateRealLoc = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        (err) => console.log("Location disabled."),
+        { enableHighAccuracy: true }
+      );
+    }
+  };
 
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
