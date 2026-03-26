@@ -241,31 +241,47 @@ Unit Dispatch: Pending Confirmation via Satellite.`);
           </div>
         </div>
 
-        {/* Center: Radar */}
-        <div className="glass premium-gradient" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
-           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-              <h3 style={{ margin: 0 }}>Live Environmental Scan</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>V6 Surveillance Command Active</p>
+        {/* Center: Tactical Surveillance Map */}
+        <div className="glass premium-gradient" style={{ padding: '0', display: 'flex', flexDirection: 'column', position: 'relative', minHeight: '400px' }}>
+           <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, background: 'rgba(15, 23, 42, 0.8)', padding: '10px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--accent-primary)' }}>TACTICAL SURVEILLANCE</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', margin: 0 }}>V9 SATELLITE LINK ACTIVE</p>
            </div>
-
-           {activeAlert && (
-             <div className="voice-banner animate-fade-in" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                <p style={{ fontSize: '0.9rem', margin: 0, fontWeight: 500 }}>AI VOICE: {activeAlert}</p>
-             </div>
-           )}
-
-           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: '220px', height: '220px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.05)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <div className="radar-ring" style={{ borderColor: 'rgba(59, 130, 246, 0.4)' }}></div>
-                 <div style={{ width: '8px', height: '8px', background: 'var(--accent-primary)', borderRadius: '50%', zIndex: 2, boxShadow: '0 0 20px var(--accent-primary)' }}></div>
-                 <div style={{ position: 'absolute', top: '25%', left: '35%', width: '5px', height: '5px', background: 'white', borderRadius: '50%', opacity: 0.6 }}></div>
+           
+           <div style={{ flex: 1, background: '#0f172a', position: 'relative', overflow: 'hidden' }}>
+              {/* Simulated Map Background */}
+              <div style={{ position: 'absolute', inset: 0, opacity: 0.4, background: 'radial-gradient(circle, #1e293b 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+              
+              {/* Simulated Map Roads */}
+              <div style={{ position: 'absolute', height: '4px', width: '100%', background: 'rgba(51, 65, 85, 0.5)', top: '50%' }}></div>
+              <div style={{ position: 'absolute', width: '4px', height: '100%', background: 'rgba(51, 65, 85, 0.5)', left: '50%' }}></div>
+              
+              {/* Nearby Units */}
+              <div style={{ position: 'absolute', top: '30%', left: '40%', width: '10px', height: '10px', background: 'var(--accent-primary)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent-primary)' }}>
+                 <div style={{ position: 'absolute', top: '-20px', left: '-20px', fontSize: '0.6rem', color: 'var(--accent-primary)', fontWeight: 'bold' }}>P-UNIT 7</div>
+              </div>
+              <div style={{ position: 'absolute', bottom: '20%', right: '30%', width: '10px', height: '10px', background: 'var(--success)', borderRadius: '50%', boxShadow: '0 0 10px var(--success)' }}>
+                 <div style={{ position: 'absolute', top: '-20px', left: '-20px', fontSize: '0.6rem', color: 'var(--success)', fontWeight: 'bold' }}>AMB-12</div>
+              </div>
+ 
+              {/* Driver Location (Centered) */}
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 5 }}>
+                 <div style={{ width: '14px', height: '14px', background: 'white', borderRadius: '50%', border: '3px solid var(--accent-primary)', boxShadow: '0 0 20px white' }}></div>
               </div>
            </div>
-
-           <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>GPS Locked</span>
-              <p style={{ fontSize: '1.1rem', fontWeight: 600, margin: '4px 0' }}>Skyline Drive, Sector 7</p>
+ 
+           <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(15, 23, 42, 0.9)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <div>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Fix</span>
+                <p style={{ fontSize: '1rem', fontWeight: 700, margin: 0 }}>{coords ? `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}` : 'Scanning Sector 7...'}</p>
+              </div>
+              <button 
+                onClick={updateRealLoc} 
+                className="btn-primary"
+                style={{ width: 'auto', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '20px' }}
+              >
+                 📡 Refresh GPS
+              </button>
            </div>
         </div>
 
