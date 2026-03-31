@@ -44,37 +44,38 @@ Possible fixes:
 
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', width: '100%', padding: '20px' }} className="animate-fade-in">
-      <div className="glass" style={{ width: '100%', maxWidth: '420px', padding: '40px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', width: '100%', padding: '20px', background: 'radial-gradient(circle at center, #1e293b 0%, #020617 100%)' }}>
+      <div className="glass shadow-2xl" style={{ width: '100%', maxWidth: '440px', padding: '48px', display: 'flex', flexDirection: 'column', gap: '32px', border: '1px solid rgba(255,255,255,0.1)' }}>
         
         <div style={{ textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', padding: '16px', background: 'var(--accent-glow)', borderRadius: '50%', marginBottom: '16px' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ display: 'inline-flex', padding: '20px', background: 'var(--accent-glow)', borderRadius: '24px', marginBottom: '20px', border: '1px solid var(--accent-primary)' }}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
           </div>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: '8px' }}>Road Sentinel</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Emergency Response & Safety Ecosystem <span style={{ color: 'var(--accent-primary)', fontWeight: 800 }}>V8</span>
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '8px', letterSpacing: '-1px' }}>SENTINEL<span style={{ color: 'var(--accent-primary)' }}>AI</span></h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600 }}>
+            Traffic & Safety Protocol <span style={{ color: 'var(--accent-primary)' }}>v9.0</span>
           </p>
         </div>
 
         {/* Role Selector */}
-        <div style={{ display: 'flex', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '4px', borderRadius: '12px' }}>
+        <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.03)', padding: '6px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
           {(['driver', 'police', 'hospital', 'fire'] as UserRole[]).map((r) => (
             <button 
               key={r}
               onClick={() => setRole(r)}
               style={{ 
                 flex: 1, 
-                padding: '8px', 
-                fontSize: '0.75rem', 
+                padding: '10px 4px', 
+                fontSize: '0.7rem', 
                 background: role === r ? 'var(--accent-primary)' : 'transparent',
                 color: role === r ? 'white' : 'var(--text-secondary)',
-                borderRadius: '8px',
+                borderRadius: '12px',
                 width: 'auto',
-                fontWeight: 600,
-                textTransform: 'capitalize'
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
             >
               {r}
@@ -82,78 +83,84 @@ Possible fixes:
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {role === 'driver' ? (
             <>
               <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Gmail / Email Address</label>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>Registry Email</label>
                 <input 
                   type="email" 
-                  placeholder="driver@example.com" 
+                  placeholder="name@gmail.com" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required 
+                  style={{ background: 'rgba(15, 23, 42, 0.8)', padding: '14px' }}
                 />
               </div>
 
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Phone Number</label>
-                <input 
-                  type="tel" 
-                  placeholder="+1 (555) 000-0000" 
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required 
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Car Name & Model</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. Tesla Model 3" 
-                  value={carName}
-                  onChange={(e) => setCarName(e.target.value)}
-                  required 
-                />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>Phone</label>
+                  <input 
+                    type="tel" 
+                    placeholder="+91-000-000" 
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required 
+                    style={{ background: 'rgba(15, 23, 42, 0.8)', padding: '14px' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>Vehicle</label>
+                  <input 
+                    type="text" 
+                    placeholder="Tesla M3" 
+                    value={carName}
+                    onChange={(e) => setCarName(e.target.value)}
+                    required 
+                    style={{ background: 'rgba(15, 23, 42, 0.8)', padding: '14px' }}
+                  />
+                </div>
               </div>
             </>
           ) : (
             <>
               <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Station / Unit ID</label>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>Unit Identifier / Badge</label>
                 <input 
                   type="text" 
-                  placeholder={`e.g. ${role.toUpperCase()}-742`} 
+                  placeholder={`UNIT-${role.toUpperCase()}-7`} 
                   value={stationId}
                   onChange={(e) => setStationId(e.target.value)}
                   required 
+                  style={{ background: 'rgba(15, 23, 42, 0.8)', padding: '14px' }}
                 />
               </div>
-              <div style={{ padding: '16px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '8px', marginBottom: '16px', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
-                <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--accent-primary)' }}>
-                  Authority Access Mode: Secure terminal for {role} personnel.
+              <div style={{ padding: '14px', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--accent-primary)', textAlign: 'center' }}>
+                  🔐 SECURE AUTHORITY HANDSHAKE ACTIVE
                 </p>
               </div>
             </>
           )}
 
-          <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '16px' }}>
+          <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '12px', padding: '16px' }}>
             {loading ? (
-              <span className="animate-pulse">Authorizing...</span>
+              <span className="animate-pulse">VERIFYING...</span>
             ) : (
-              <span>Enter Dashboard</span>
+              <span>INITIALIZE DASHBOARD</span>
             )}
           </button>
 
           <button 
             type="button" 
+            className="btn-glass"
             onClick={() => {
               const demoUser = {
                 id: 888,
-                email: 'demo@safety.gov',
-                phone: '+1234567890',
-                carName: 'Security Patrol V8',
+                email: 'demo@sentinel.gov',
+                phone: '+9199999999',
+                carName: 'Patrol Cruiser X',
                 role: 'driver' as const
               };
               localStorage.setItem('road_safety_user', JSON.stringify(demoUser));
@@ -161,18 +168,18 @@ Possible fixes:
             }} 
             style={{ 
               width: '100%', 
-              background: 'rgba(59, 130, 246, 0.1)', 
-              border: '1px dashed var(--accent-primary)', 
-              color: 'var(--accent-primary)', 
-              fontSize: '0.9rem', 
-              marginTop: '15px', 
+              background: 'rgba(255, 255, 255, 0.02)', 
+              border: '1px dashed rgba(255, 255, 255, 0.1)', 
+              color: 'var(--text-secondary)', 
+              fontSize: '0.8rem', 
+              marginTop: '8px', 
               padding: '12px',
               borderRadius: '12px',
               fontWeight: 700,
               cursor: 'pointer'
             }}
           >
-            🚀 QUICK LAUNCH (DEMO MODE)
+            DEBUG: BYPASS WITH DEMO PROFILE
           </button>
         </form>
       </div>

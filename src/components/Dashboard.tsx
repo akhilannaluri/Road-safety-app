@@ -9,8 +9,8 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [bluetoothConnected] = useState(true);
-  const [safetyScore, setSafetyScore] = useState(98);
-  const [activeAlert, setActiveAlert] = useState<string | null>("System initialized. All safety protocols active.");
+  const [safetyScore] = useState(98);
+  const [activeAlert] = useState<string | null>("AI Watchdog: All sectors clear.");
   const [sosType, setSosType] = useState<string | null>(null);
   const [facilities, setFacilities] = useState<any[]>([]);
   const [contacts, setContacts] = useState<any[]>([]);
@@ -29,7 +29,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     { label: 'Battery', value: 85, color: 'var(--accent-primary)' }
   ];
 
-  const lastCheckIn = React.useRef(Date.now());
   const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
@@ -64,7 +63,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        (err) => console.log("Location disabled."),
+        (err) => console.log("Location disabled:", err),
         { enableHighAccuracy: true }
       );
     }
@@ -98,10 +97,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     }
   };
 
-  const [isSending, setIsSending] = useState(false);
 
   const handleSOS = async (type: string) => {
-    setIsSending(true);
+    console.log(`Sending ${type} Alert...`);
     setSosType(type);
     try {
       // Professional Satellite Coordination Delay
@@ -132,7 +130,6 @@ Unit Dispatch: Pending Confirmation via Satellite.`);
     } catch (err) {
       alert("❌ SIGNAL INTERRUPTED: Emergency cloud unavailable. Try manual dial.");
     } finally {
-      setIsSending(false);
       setSosType(null);
     }
   };
@@ -218,27 +215,43 @@ Unit Dispatch: Pending Confirmation via Satellite.`);
             </div>
           </div>
 
-          {/* Infrastructure nearby */}
-          <div className="glass" style={{ padding: '24px', flex: 1 }}>
-             <h3 style={{ fontSize: '1.1rem', marginBottom: '20px' }}>Infrastructure nearby</h3>
-             <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {facilities.map((f, idx) => (
-                  <div key={idx} className="facility-item" style={{ borderLeft: `3px solid ${f.type === 'Community' ? 'var(--success)' : 'var(--accent-primary)'}` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                      <h4 style={{ fontSize: '0.95rem', margin: 0 }}>{f.name}</h4>
-                      <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '10px' }}>{f.distance}</span>
-                    </div>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '4px 0' }}>{f.address}</p>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <button style={{ width: 'auto', padding: '4px 0', background: 'none', color: 'var(--accent-primary)', fontSize: '0.8rem', fontWeight: 500 }}>Route</button>
-                      <button style={{ width: 'auto', padding: '4px 0', background: 'none', color: 'var(--success)', fontSize: '0.8rem', fontWeight: 500 }} onClick={() => alert(`Calling Service: ${f.name}`)}>
-                        {f.type === 'Community' ? 'Contact Helper' : 'Direct Call'}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-             </div>
-          </div>
+           {/* Real-World Alert Ticker */}
+           <div style={{ background: 'var(--danger-glow)', padding: '12px 20px', borderRadius: '12px', borderLeft: '4px solid var(--danger)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }} className="animate-pulse">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" strokeWidth="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div style={{ flex: 1, overflow: 'hidden' }}>
+                 <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    LIVE: {activeAlert} | HEAVY TRAFFIC AT SECTOR 4 | AMBULANCE 12 RESPONDING TO ROUTE 99
+                 </p>
+              </div>
+           </div>
+
+           <div className="glass" style={{ padding: '24px', flex: 1 }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                 Infrastructure nearby
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                 {facilities.length > 0 ? facilities.map((f, idx) => (
+                   <div key={idx} className="facility-item" style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                       <h4 style={{ fontSize: '0.95rem', margin: 0, color: 'var(--text-primary)' }}>{f.name}</h4>
+                       <span style={{ fontSize: '0.7rem', background: f.type === 'Community' ? 'var(--success-glow)' : 'var(--accent-glow)', color: f.type === 'Community' ? 'var(--success)' : 'var(--accent-primary)', padding: '2px 8px', borderRadius: '20px', fontWeight: 700 }}>{f.distance}</span>
+                     </div>
+                     <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '6px 0' }}>{f.address}</p>
+                     <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                       <button className="btn-primary" style={{ width: 'auto', padding: '6px 12px', fontSize: '0.7rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-primary)' }}>ROUTING</button>
+                       <button className="btn-primary" style={{ width: 'auto', padding: '6px 12px', fontSize: '0.7rem', borderRadius: '8px' }} onClick={() => alert(`Calling Service: ${f.name}`)}>
+                         {f.type === 'Community' ? 'SOS HELP' : 'DIRECT CALL'}
+                       </button>
+                     </div>
+                   </div>
+                 )) : (
+                   <div style={{ textAlign: 'center', padding: '30px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px dashed rgba(255,255,255,0.1)' }}>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Synchronizing local units...</p>
+                   </div>
+                 )}
+              </div>
+           </div>
         </div>
 
         {/* Center: Tactical Surveillance Map */}
