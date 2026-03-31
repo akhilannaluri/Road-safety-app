@@ -1,73 +1,27 @@
-# React + TypeScript + Vite
+# 🛡️ SENTINEL AI - V12 Ultimate Secure Build
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Road Sentinel is a next-generation real-time traffic safety and emergency response ecosystem. Designed for high-speed reliability and real-world coordination, it connects drivers with emergency services (Police, Medical, Fire) and the community in seconds.
 
-Currently, two official plugins are available:
+## 🚀 Live Application
+Access the app from any device (Phone/PC):
+👉 **[https://akhilannaluri.github.io/Road-safety-app/](https://akhilannaluri.github.io/Road-safety-app/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Core Features
+- **🛰️ Tactical Map View**: Real-time GPS tracking and navigation link for emergency services.
+- **🚨 1-Click SOS**: Instant broadcasting to Medical, Security, or Community units.
+- **🤙 Voice Relay**: Automated dispatch and emergency contact notification.
+- **📊 Live Ticker**: Real-world traffic and environmental alerts.
+- **📱 Ultra-Stable UI**: Optimized for mobile devices to prevent memory crashes (no 'black screen' glitches).
+- **🛡️ Secure Handshake**: Role-based access for authority personnel.
 
-## React Compiler
+## 🛠️ Technology Stack
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: Advanced Vanilla CSS (Premium Glassmorphism)
+- **Deployment**: GitHub Actions (Infinite Build Credits)
+- **Server**: Render.com (PostgreSQL + Express)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📡 Database
+This application is connected to a live production database. All incidents are logged for real-world authority response simulation.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+© 2026 Sentinel Safety Systems | V12 Stable
