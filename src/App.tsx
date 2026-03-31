@@ -1,5 +1,6 @@
-// Build Trigger: V6.1 Clean Build
 import { useState } from 'react';
+import type { Language } from './utils/translations';
+import { translations } from './utils/translations';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import PoliceDashboard from './components/PoliceDashboard';
@@ -20,10 +21,19 @@ export interface UserData {
 
 
 function App() {
+  const [lang, setLang] = useState<Language>(() => {
+    return (localStorage.getItem('road_safety_lang') as Language) || 'en';
+  });
+
   const [userData, setUserData] = useState<UserData | null>(() => {
     const saved = localStorage.getItem('road_safety_user');
     return saved ? JSON.parse(saved) : null;
   });
+
+  const handleLanguageChange = (newLang: Language) => {
+    setLang(newLang);
+    localStorage.setItem('road_safety_lang', newLang);
+  };
 
   const handleLogin = (data: UserData) => {
     setUserData(data);
@@ -37,16 +47,23 @@ function App() {
   const renderDashboard = () => {
     if (!userData) return null;
 
+    const props = { 
+      user: userData, 
+      onLogout: handleLogout, 
+      lang,
+      onLanguageChange: handleLanguageChange 
+    };
+
     switch (userData.role) {
       case 'police':
-        return <PoliceDashboard user={userData} onLogout={handleLogout} />;
+        return <PoliceDashboard {...props} />;
       case 'hospital':
-        return <HospitalDashboard user={userData} onLogout={handleLogout} />;
+        return <HospitalDashboard {...props} />;
       case 'fire':
-        return <FireDashboard user={userData} onLogout={handleLogout} />;
+        return <FireDashboard {...props} />;
       case 'driver':
       default:
-        return <Dashboard user={userData} onLogout={handleLogout} />;
+        return <Dashboard {...props} />;
     }
   };
 
@@ -59,7 +76,7 @@ function App() {
       {userData ? (
         renderDashboard()
       ) : (
-        <Login onLogin={handleLogin} />
+        <Login onLogin={handleLogin} lang={lang} onLanguageChange={handleLanguageChange} />
       )}
     </div>
   );
