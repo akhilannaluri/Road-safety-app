@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import type { UserData, UserRole } from '../App';
 import { loginUser } from '../utils/api';
 
-import { Language, translations } from '../utils/translations';
+import type { Language } from '../utils/translations';
+import { translations } from '../utils/translations';
+
 
 interface LoginProps {
   onLogin: (data: UserData) => void;

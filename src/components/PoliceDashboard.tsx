@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import type { UserData } from '../App';
 import { getIncidents, dispatchUnit, updateIncidentStatus } from '../utils/api';
+import type { Language } from '../utils/translations';
+import { translations } from '../utils/translations';
 
 interface PoliceDashboardProps {
   user: UserData;
   onLogout: () => void;
+  lang: Language;
+  onLanguageChange: (lang: Language) => void;
 }
 
-const PoliceDashboard: React.FC<PoliceDashboardProps> = ({ user, onLogout }) => {
+const PoliceDashboard: React.FC<PoliceDashboardProps> = ({ user, onLogout, lang, onLanguageChange }) => {
+  const t = translations[lang];
+
   const [activeIncidents, setActiveIncidents] = useState<any[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState<any>(null);
   const [unitId, setUnitId] = useState('');
@@ -59,9 +65,11 @@ const PoliceDashboard: React.FC<PoliceDashboardProps> = ({ user, onLogout }) => 
           <h1 style={{ fontSize: '1.2rem', fontWeight: 800 }}>POLICE COMMAND CENTER (V6)</h1>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>Precinct: {user.stationId} | Hotspot Risk: <span style={{ color: calculateHotspots() === 'HIGH (Sector 7)' ? 'var(--danger)' : 'var(--success)' }}>{calculateHotspots()}</span></p>
         </div>
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <button onClick={() => alert("All units alert: High incident density detected in Sector 7.")} style={{ width: 'auto', background: 'rgba(255,255,255,0.05)', fontSize: '0.8rem' }}>Broadcast Hotspot Alert</button>
-          <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', borderRadius: '30px', background: 'var(--danger)', color: 'white', fontWeight: 700 }}>Secure Logout</button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          {(['en', 'te', 'hi'] as Language[]).map(l => (
+            <button key={l} onClick={() => onLanguageChange(l)} style={{ width: 'auto', padding: '4px 8px', fontSize: '0.65rem', background: lang === l ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)', borderRadius: '6px' }}>{l.toUpperCase()}</button>
+          ))}
+          <button onClick={onLogout} className="btn-primary" style={{ width: 'auto', borderRadius: '30px', background: 'var(--danger)', color: 'white', fontWeight: 700 }}>{t.logout}</button>
         </div>
       </header>
 
